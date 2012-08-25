@@ -110,6 +110,11 @@ public class GroupGameImpl implements GroupGame {
 				return firstMaxI;
 		}
 	}
+
+	void tellResults(int killed, Boolean checked) {
+		System.out.println("Killed : " + killed);
+		System.out.println("Checked : " + checked);
+	}
 	
 
 	@Override
