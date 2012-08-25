@@ -180,7 +180,10 @@ public class GroupGameImpl implements GroupGame {
 						currentPlayers.add(players.get(i));
 					}
 				}
-				choosen[currentTypeIndex] = makeMove(currentPlayers);
+				if (currentPlayers.size() > 0)
+					choosen[currentTypeIndex] = makeMove(currentPlayers);
+				else
+					choosen[currentTypeIndex] = -1;
 				System.out.println("chosen by " + typeNames[currentTypeIndex] + " : " + choosen[currentTypeIndex]);
 			}
 			int indexOfKilled = choosen[0];
