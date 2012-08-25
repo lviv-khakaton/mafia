@@ -2,6 +2,7 @@ package com.khakaton.mafia.implementations;
 
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -65,34 +66,74 @@ public class GroupGameImpl implements GroupGame {
 
 	private int makeMove(List<Player> currentPlayers)
 	{
-		HashSet<Integer> decisions = new HashSet<Integer>();
-		for (int i = 0; i < currentPlayers.size(); ++i)
+		while (true)
 		{
-			decisions.add(currentPlayers.get(i).getDecision());
+			HashSet<Integer> decisions = new HashSet<Integer>();
+			for (int i = 0; i < currentPlayers.size(); ++i)
+			{
+				decisions.add(currentPlayers.get(i).getDecision());
+			}
+			if (decisions.size() == 1)
+				return decisions.iterator().next();
 		}
-		if (decisions.size() == 1)
-			return decisions.iterator().next();
-		return 0;
+	}
+	
+	private int chooseWhomToKill(List<Player> currentPlayers)
+	{
+		while (true)
+		{
+			Integer[] decisions = new Integer[players.size()];
+			Arrays.fill(decisions, 0);
+			for (int i=0; i < currentPlayers.size(); ++i)
+			{
+				decisions[currentPlayers.get(i).getDecision()]++;
+			}
+			int firstMax = 0, secondMax = 0, firstMaxI = 0, secondMaxI = 0;
+		}
 	}
 	
 
 	@Override
 	public void doCycle() {
 		// TODO Auto-generated method stub
-		int currentTypeIndex = 0;
 		PlayerType[] currentType = {PlayerType.Mafia, PlayerType.Detective, PlayerType.Doctor};
 		while (true)
 		{
+			Integer[] choosen = new Integer[4];
+			for (int currentTypeIndex = 0; currentTypeIndex < 3; ++currentTypeIndex)
+			{
+				List<Player> currentPlayers = new ArrayList<Player>();
+				for (int i = 0; i < players.size(); ++i)
+				{
+					if (players.get(i).getAlive() && players.get(i).getType() == currentType[currentTypeIndex])
+					{
+						currentPlayers.add(players.get(i));
+					}
+				}
+				choosen[currentTypeIndex] = makeMove(currentPlayers);
+			}
+			int indexOfKilled = choosen[0];
+			if (choosen[0] == choosen[2])
+				indexOfKilled = -1;
+			else
+				players.get(indexOfKilled).setAlive(false);
+			
+			Boolean checkedCorrectly = false;
+			if (players.get(choosen[1]).getType() == PlayerType.Mafia)
+				checkedCorrectly = true;
+			tellResults(indexOfKilled, checkedCorrectly);
+			
 			List<Player> currentPlayers = new ArrayList<Player>();
 			for (int i = 0; i < players.size(); ++i)
 			{
-				if (players.get(i).getAlive() && players.get(i).getType() == currentType[currentTypeIndex])
+				if (players.get(i).getAlive())
 				{
 					currentPlayers.add(players.get(i));
 				}
 			}
-			makeMove(currentPlayers);
-			++currentTypeIndex;
+			
+			indexOfKilled = chooseWhomToKill(currentPlayers);
+			players.get(indexOfKilled).setAlive(false);
 		}
 	}
 	public static void main(String[] args) {
