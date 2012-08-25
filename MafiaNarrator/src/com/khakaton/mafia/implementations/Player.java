@@ -6,9 +6,10 @@ public class Player {
 	private int decision;
 	private String playerName; 
 	
-	public Player(PlayerType type){
-		this.alive=true;
-		this.type=type;
+	public Player(String playerName){
+		this.playerName = playerName;
+		this.alive = true;
+		decision = -1;
 	}
 	
 	public PlayerType getType() {

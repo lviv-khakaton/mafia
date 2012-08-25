@@ -16,9 +16,11 @@ public class GroupGameImpl implements GroupGame {
 	private int detectiveCount;
 	private int doctorCount;
 	private int totalCount;
+	private List<Socket> sockets;
 	
 	public GroupGameImpl(int mafiaCount, int detectiveCount, int doctorCount, int totalCount) {
 		players = new ArrayList<Player>();
+		sockets = new ArrayList<Socket>();
 		this.mafiaCount = mafiaCount;
 		this.doctorCount = doctorCount;
 		this.detectiveCount = detectiveCount;
@@ -44,12 +46,14 @@ public class GroupGameImpl implements GroupGame {
 		Collections.shuffle(playerTypes);
 		
 		for (int i=0; i<getTotalCount(); i++){
-			players.add(new Player(playerTypes.get(i)));
+			players.get(i).setType(playerTypes.get(i));
 		}
 	}
 	
 	public void addPlayer(String name, Socket socket) {
 		//TODO
+		players.add(new Player(name));
+		sockets.add(socket);
 	}
 	
 	@Override
