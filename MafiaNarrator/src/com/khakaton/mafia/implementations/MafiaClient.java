@@ -20,6 +20,15 @@ public class MafiaClient {
 		DataOutputStream os = new DataOutputStream(socket.getOutputStream());
 		DataInputStream is = new DataInputStream(socket.getInputStream());
 		os.writeUTF(name);
+		while(true) {
+			String dialog = is.readUTF();
+			if(dialog == "Goodbye")
+				break;
+			System.out.println(dialog);
+			int choosed = s.nextInt();
+			os.write(choosed);
+		}
+		System.out.println("Game over.");
 	}
 
 }
