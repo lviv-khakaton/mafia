@@ -4,6 +4,11 @@ public class Player {
 	private PlayerType type;
 	private Boolean alive;
 	
+	public Player(PlayerType type){
+		this.alive=true;
+		this.type=type;
+	}
+	
 	public PlayerType getType() {
 		return type;
 	}
