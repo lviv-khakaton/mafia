@@ -22,20 +22,26 @@ public class GroupGameImpl implements GroupGame {
 	}
 	
 	public void makeRoles(){
+		
+		List<PlayerType>playerTypes = new ArrayList<PlayerType>();
 		for (int i=0; i<mafiaCount; i++){
-			players.add(new Player(PlayerType.Mafia));
-		}		
+			playerTypes.add(PlayerType.Mafia);
+		}
 		for (int i=0; i<doctorCount; i++){
-			players.add(new Player(PlayerType.Doctor));
-		}		
+			playerTypes.add(PlayerType.Doctor);			
+		}
 		for (int i=0; i<detectiveCount; i++){
-			players.add(new Player(PlayerType.Detective));
+			playerTypes.add(PlayerType.Detective);
 		}
 		for (int i=mafiaCount+doctorCount+detectiveCount; i<totalCount; i++){
-			players.add(new Player(PlayerType.Citizen));
+			playerTypes.add(PlayerType.Citizen);
 		}
 		
-		Collections.shuffle(players);
+		Collections.shuffle(playerTypes);
+		
+		for (int i=0; i<totalCount; i++){
+			players.add(new Player(playerTypes.get(i)));
+		}
 	}
 	
 	@Override
@@ -59,7 +65,11 @@ public class GroupGameImpl implements GroupGame {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		System.out.println("af");
+		GroupGameImpl game = new GroupGameImpl(2,2,2,10);
+		game.makeRoles();
+		for (int i=0; i<game.players.size(); i++){
+			System.out.println(game.players.get(i).getType());
+		}
 	}
 	
 }
