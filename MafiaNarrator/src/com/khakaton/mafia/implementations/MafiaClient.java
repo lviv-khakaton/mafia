@@ -22,11 +22,13 @@ public class MafiaClient {
 		os.writeUTF(name);
 		while(true) {
 			String dialog = is.readUTF();
+			System.out.println(dialog);
 			if(dialog == "Goodbye")
 				break;
-			System.out.println(dialog);
+			if(dialog.startsWith("Please, go sleep.") )
+				continue;
 			int chosen = s.nextInt();
-			os.write(chosen);
+			os.writeInt(chosen);
 		}
 		System.out.println("Game over.");
 	}

@@ -17,7 +17,6 @@ public class GroupGameImpl implements GroupGame {
 	private int detectiveCount;
 	private int doctorCount;
 	private int totalCount;
-	private List<Socket> sockets;
 	
 	public GroupGameImpl(int mafiaCount, int detectiveCount, int doctorCount, int totalCount) {
 		players = new ArrayList<Player>();
@@ -105,6 +104,7 @@ public class GroupGameImpl implements GroupGame {
 	
 	private int chooseWhomToKill(List<Player> currentPlayers)
 	{
+		System.out.println("in chooseWhomToKill");
 		while (true)
 		{
 			for(Player player : currentPlayers) {
@@ -151,13 +151,22 @@ public class GroupGameImpl implements GroupGame {
 	void tellResults(int killed, Boolean checked) {
 		System.out.println("Killed : " + killed);
 		System.out.println("Checked : " + checked);
+		System.out.print("Still alive : ");
+		for(Player player : players)
+			if(player.getAlive())
+				System.out.print(player.getPlayerName() + " ");
+		System.out.print("\n");
 	}
 	
 
 	@Override
 	public void doCycle() {
 		// TODO Auto-generated method stub
+		
+		System.out.println("doCycle called");
+		
 		PlayerType[] currentType = {PlayerType.Mafia, PlayerType.Detective, PlayerType.Doctor};
+		String[] typeNames = {"PlayerType.Mafia", "PlayerType.Detective", "PlayerType.Doctor"};
 		while (true)
 		{
 			Integer[] choosen = new Integer[4];
@@ -172,6 +181,7 @@ public class GroupGameImpl implements GroupGame {
 					}
 				}
 				choosen[currentTypeIndex] = makeMove(currentPlayers);
+				System.out.println("chosen by " + typeNames[currentTypeIndex] + " : " + choosen[currentTypeIndex]);
 			}
 			int indexOfKilled = choosen[0];
 			if (choosen[0] == choosen[2])
@@ -192,6 +202,8 @@ public class GroupGameImpl implements GroupGame {
 					currentPlayers.add(players.get(i));
 				}
 			}
+			
+			System.out.println("ChooseWhomToKill called");
 			
 			indexOfKilled = chooseWhomToKill(currentPlayers);
 			players.get(indexOfKilled).setAlive(false);

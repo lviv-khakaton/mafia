@@ -49,7 +49,7 @@ public class Player {
 		int _decision = -1;
 		try {
 			DataInputStream is = new DataInputStream(socket.getInputStream());
-			_decision = is.read();
+			_decision = is.readInt();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
