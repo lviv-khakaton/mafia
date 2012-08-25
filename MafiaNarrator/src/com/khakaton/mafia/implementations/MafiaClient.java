@@ -25,8 +25,8 @@ public class MafiaClient {
 			if(dialog == "Goodbye")
 				break;
 			System.out.println(dialog);
-			int choosed = s.nextInt();
-			os.write(choosed);
+			int chosen = s.nextInt();
+			os.write(chosen);
 		}
 		System.out.println("Game over.");
 	}

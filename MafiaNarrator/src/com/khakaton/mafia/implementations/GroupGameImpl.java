@@ -1,5 +1,6 @@
 package com.khakaton.mafia.implementations;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,14 +21,13 @@ public class GroupGameImpl implements GroupGame {
 	
 	public GroupGameImpl(int mafiaCount, int detectiveCount, int doctorCount, int totalCount) {
 		players = new ArrayList<Player>();
-		sockets = new ArrayList<Socket>();
 		this.mafiaCount = mafiaCount;
 		this.doctorCount = doctorCount;
 		this.detectiveCount = detectiveCount;
 		this.setTotalCount(totalCount);
 	}
 	
-	public void makeRoles(){
+	public void setRoles(){
 		
 		List<PlayerType>playerTypes = new ArrayList<PlayerType>();
 		for (int i=0; i<mafiaCount; i++){
@@ -52,33 +52,54 @@ public class GroupGameImpl implements GroupGame {
 	
 	public void addPlayer(String name, Socket socket) {
 		//TODO
-		players.add(new Player(name));
-		sockets.add(socket);
+		players.add(new Player(name, socket));
 	}
 	
 	@Override
 	public void start() {
 		// TODO Auto-generated method stub
-
+		setRoles();
+		play();
 	}
 
 	@Override
 	public void play() {
-		// TODO Auto-generated method stub
-
+		while(true) {
+			doCycle();
+		}
 	}
 
 	private int makeMove(List<Player> currentPlayers)
 	{
 		while (true)
 		{
+			for(Player player : currentPlayers) {
+				try {
+					player.setActive(true);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			HashSet<Integer> decisions = new HashSet<Integer>();
 			for (int i = 0; i < currentPlayers.size(); ++i)
 			{
 				decisions.add(currentPlayers.get(i).getDecision());
 			}
-			if (decisions.size() == 1)
-				return decisions.iterator().next();
+						
+			if (decisions.size() == 1) {
+				int voted = decisions.iterator().next();
+				if(voted!=-1) {
+					for(Player player : currentPlayers) {
+						try {
+							player.setActive(false);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+					return voted;
+				}
+			}
 		}
 	}
 	
@@ -86,6 +107,14 @@ public class GroupGameImpl implements GroupGame {
 	{
 		while (true)
 		{
+			for(Player player : currentPlayers) {
+				try {
+					player.setActive(true);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			Integer[] decisions = new Integer[players.size()];
 			Arrays.fill(decisions, 0);
 			for (int i = 0; i < currentPlayers.size(); ++i)
@@ -106,8 +135,16 @@ public class GroupGameImpl implements GroupGame {
 					secondMax = decisions[i];
 				}
 			}
-			if (firstMax != secondMax)
+			if (firstMax != secondMax) {
+				for(Player player : currentPlayers) {
+					try {
+						player.setActive(false);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 				return firstMaxI;
+			}
 		}
 	}
 
@@ -162,12 +199,12 @@ public class GroupGameImpl implements GroupGame {
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
+		/*
 		GroupGameImpl game = new GroupGameImpl(2,2,2,10);
 		game.makeRoles();
 		for (int i=0; i<game.players.size(); i++){
 			System.out.println(game.players.get(i).getType());
-		}
+		}*/
 	}
 
 	public int getTotalCount() {
