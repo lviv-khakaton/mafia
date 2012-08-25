@@ -1,5 +1,6 @@
 package com.khakaton.mafia.implementations;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class GroupGameImpl implements GroupGame {
 	private int totalCount;
 	
 	public GroupGameImpl(int mafiaCount, int detectiveCount, int doctorCount, int totalCount) {
+		players = new ArrayList<Player>();
 		this.mafiaCount = mafiaCount;
 		this.doctorCount = doctorCount;
 		this.detectiveCount = detectiveCount;
@@ -54,4 +56,10 @@ public class GroupGameImpl implements GroupGame {
 
 	}
 
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		System.out.println("af");
+	}
+	
 }
