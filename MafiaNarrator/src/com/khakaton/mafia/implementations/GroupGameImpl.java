@@ -206,7 +206,7 @@ public class GroupGameImpl implements GroupGame {
 			}
 			if (mafiaLeft == 0 || mafiaLeft == playersLeft)
 			{
-				endOFGame(mafiaLeft);
+				endOfGame(mafiaLeft);
 			}
 			Boolean checkedCorrectly = false;
 			if (players.get(choosen[1]).getType() == PlayerType.Mafia)
@@ -232,7 +232,7 @@ public class GroupGameImpl implements GroupGame {
 				--mafiaLeft;
 			if (mafiaLeft == 0 || mafiaLeft == playersLeft)
 			{
-				endOFGame(mafiaLeft);
+				endOfGame(mafiaLeft);
 			}
 		}
 	}
