@@ -158,12 +158,20 @@ public class GroupGameImpl implements GroupGame {
 		System.out.print("\n");
 	}
 	
+	void endOfGame(int mafia)
+	{
+		System.out.println("Game Over!\n" + mafia + " mafia left\n");
+	}
+	
 
 	@Override
 	public void doCycle() {
 		// TODO Auto-generated method stub
 		
 		System.out.println("doCycle called");
+		
+		int mafiaLeft = mafiaCount;
+		int playersLeft = players.size();
 		
 		PlayerType[] currentType = {PlayerType.Mafia, PlayerType.Detective, PlayerType.Doctor};
 		String[] typeNames = {"PlayerType.Mafia", "PlayerType.Detective", "PlayerType.Doctor"};
@@ -190,8 +198,16 @@ public class GroupGameImpl implements GroupGame {
 			if (choosen[0] == choosen[2])
 				indexOfKilled = -1;
 			else
+			{
 				players.get(indexOfKilled).setAlive(false);
-			
+				--playersLeft;
+				if (players.get(indexOfKilled).getType() == PlayerType.Mafia)
+					--mafiaLeft;
+			}
+			if (mafiaLeft == 0 || mafiaLeft == playersLeft)
+			{
+				endOFGame(mafiaLeft);
+			}
 			Boolean checkedCorrectly = false;
 			if (players.get(choosen[1]).getType() == PlayerType.Mafia)
 				checkedCorrectly = true;
@@ -209,7 +225,15 @@ public class GroupGameImpl implements GroupGame {
 			System.out.println("ChooseWhomToKill called");
 			
 			indexOfKilled = chooseWhomToKill(currentPlayers);
+			
 			players.get(indexOfKilled).setAlive(false);
+			--playersLeft;
+			if (players.get(indexOfKilled).getType() == PlayerType.Mafia)
+				--mafiaLeft;
+			if (mafiaLeft == 0 || mafiaLeft == playersLeft)
+			{
+				endOFGame(mafiaLeft);
+			}
 		}
 	}
 	public static void main(String[] args) {
