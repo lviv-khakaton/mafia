@@ -3,7 +3,9 @@ package com.khakaton.mafia.implementations;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+
 
 import com.khakaton.mafia.interfaces.GroupGame;
 
@@ -61,12 +63,38 @@ public class GroupGameImpl implements GroupGame {
 
 	}
 
+	private int makeMove(List<Player> currentPlayers)
+	{
+		HashSet<Integer> decisions = new HashSet<Integer>();
+		for (int i = 0; i < currentPlayers.size(); ++i)
+		{
+			decisions.add(currentPlayers.get(i).getDecision());
+		}
+		if (decisions.size() == 1)
+			return decisions.iterator().next();
+		return 0;
+	}
+	
+
 	@Override
 	public void doCycle() {
 		// TODO Auto-generated method stub
-
+		int currentTypeIndex = 0;
+		PlayerType[] currentType = {PlayerType.Mafia, PlayerType.Detective, PlayerType.Doctor};
+		while (true)
+		{
+			List<Player> currentPlayers = new ArrayList<Player>();
+			for (int i = 0; i < players.size(); ++i)
+			{
+				if (players.get(i).getAlive() && players.get(i).getType() == currentType[currentTypeIndex])
+				{
+					currentPlayers.add(players.get(i));
+				}
+			}
+			makeMove(currentPlayers);
+			++currentTypeIndex;
+		}
 	}
-
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
