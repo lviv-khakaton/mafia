@@ -5,9 +5,18 @@ import java.util.List;
 import com.khakaton.mafia.interfaces.GroupGame;
 
 public class GroupGameImpl implements GroupGame {
-	List<Player> players;
+	private List<Player> players;
+	private int mafiaCount;
+	private int detectiveCount;
+	private int doctorCount;
+	private int totalCount;
 	
-	
+	public GroupGameImpl(int mafiaCount, int detectiveCount, int doctorCount, int totalCount) {
+		this.mafiaCount = mafiaCount;
+		this.doctorCount = doctorCount;
+		this.detectiveCount = detectiveCount;
+		this.totalCount = totalCount;
+	}
 	
 	@Override
 	public void start() {
