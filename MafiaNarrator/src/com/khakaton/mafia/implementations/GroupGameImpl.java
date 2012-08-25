@@ -88,11 +88,26 @@ public class GroupGameImpl implements GroupGame {
 		{
 			Integer[] decisions = new Integer[players.size()];
 			Arrays.fill(decisions, 0);
-			for (int i=0; i < currentPlayers.size(); ++i)
+			for (int i = 0; i < currentPlayers.size(); ++i)
 			{
 				decisions[currentPlayers.get(i).getDecision()]++;
 			}
-			int firstMax = 0, secondMax = 0, firstMaxI = 0, secondMaxI = 0;
+			int firstMax = 0, secondMax = 0, firstMaxI = -1;
+			for (int i = 0; i < players.size(); ++i)
+			{
+				if (decisions[i] > firstMax)
+				{
+					secondMax = firstMax;
+					firstMax = decisions[i];
+					firstMaxI = i;
+				}else
+				if (decisions[i] > secondMax)
+				{
+					secondMax = decisions[i];
+				}
+			}
+			if (firstMax != secondMax)
+				return firstMaxI;
 		}
 	}
 	
