@@ -1,5 +1,6 @@
 package com.khakaton.mafia.implementations;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +19,7 @@ public class GroupGameImpl implements GroupGame {
 		this.mafiaCount = mafiaCount;
 		this.doctorCount = doctorCount;
 		this.detectiveCount = detectiveCount;
-		this.totalCount = totalCount;
+		this.setTotalCount(totalCount);
 	}
 	
 	public void makeRoles(){
@@ -33,15 +34,19 @@ public class GroupGameImpl implements GroupGame {
 		for (int i=0; i<detectiveCount; i++){
 			playerTypes.add(PlayerType.Detective);
 		}
-		for (int i=mafiaCount+doctorCount+detectiveCount; i<totalCount; i++){
+		for (int i=mafiaCount+doctorCount+detectiveCount; i<getTotalCount(); i++){
 			playerTypes.add(PlayerType.Citizen);
 		}
 		
 		Collections.shuffle(playerTypes);
 		
-		for (int i=0; i<totalCount; i++){
+		for (int i=0; i<getTotalCount(); i++){
 			players.add(new Player(playerTypes.get(i)));
 		}
+	}
+	
+	public void addPlayer(String name, Socket socket) {
+		//TODO
 	}
 	
 	@Override
@@ -70,6 +75,20 @@ public class GroupGameImpl implements GroupGame {
 		for (int i=0; i<game.players.size(); i++){
 			System.out.println(game.players.get(i).getType());
 		}
+	}
+
+	public int getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
+	}
+	
+	public int getPlayersCount() {
+		if(players==null)
+			return 0;
+		return players.size();
 	}
 	
 }
