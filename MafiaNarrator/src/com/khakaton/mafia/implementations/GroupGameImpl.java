@@ -17,9 +17,17 @@ public class GroupGameImpl implements GroupGame {
 	private int detectiveCount;
 	private int doctorCount;
 	private int totalCount;
+	private boolean finished;
 	
-	public GroupGameImpl(int mafiaCount, int detectiveCount, int doctorCount, int totalCount) {
+	public GroupGameImpl(int totalCount) {
+		finished = false;
 		players = new ArrayList<Player>();
+		int detectiveCount = 1, doctorCount = 1; 
+		int mafiaCount = totalCount / 3; 
+		if(totalCount==1) {
+			mafiaCount = 1;
+			doctorCount = detectiveCount = 0;
+		}
 		this.mafiaCount = mafiaCount;
 		this.doctorCount = doctorCount;
 		this.detectiveCount = detectiveCount;
@@ -58,23 +66,32 @@ public class GroupGameImpl implements GroupGame {
 	public void start() {
 		// TODO Auto-generated method stub
 		setRoles();
+		List<String> playerNames = new ArrayList<String>();
+		for(Player player : players)
+			playerNames.add(player.getPlayerName());
+		for(Player player : players)
+			player.notifyClient(playerNames);
 		play();
 	}
 
 	@Override
 	public void play() {
-		while(true) {
+		while(!finished) {
 			doCycle();
 		}
 	}
 
 	private int makeMove(List<Player> currentPlayers)
 	{
+		List<Boolean> actives = new ArrayList<Boolean>();
+		for(Player player : players)
+			actives.add(player.getAlive());
+		
 		while (true)
 		{
 			for(Player player : currentPlayers) {
 				try {
-					player.setActive(true);
+					player.setActive(true, actives);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -91,7 +108,7 @@ public class GroupGameImpl implements GroupGame {
 				if(voted!=-1) {
 					for(Player player : currentPlayers) {
 						try {
-							player.setActive(false);
+							player.setActive(false, actives);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -104,12 +121,15 @@ public class GroupGameImpl implements GroupGame {
 	
 	private int chooseWhomToKill(List<Player> currentPlayers)
 	{
-		System.out.println("in chooseWhomToKill");
+		List<Boolean> actives = new ArrayList<Boolean>();
+		for(Player player : players)
+			actives.add(player.getAlive());
+		
 		while (true)
 		{
 			for(Player player : currentPlayers) {
 				try {
-					player.setActive(true);
+					player.setActive(true, actives);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -138,7 +158,7 @@ public class GroupGameImpl implements GroupGame {
 			if (firstMax != secondMax) {
 				for(Player player : currentPlayers) {
 					try {
-						player.setActive(false);
+						player.setActive(false, actives);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -160,8 +180,9 @@ public class GroupGameImpl implements GroupGame {
 	
 	void endOfGame(int mafia)
 	{
-		if (mafia==0) System.out.println("-----Citizens have won!");
-		else System.out.println("-----Mafia has won!");
+		finished = true;
+		for(Player player : players)
+			player.notifyFinish(mafia!=0);
 		System.out.println("Game Over!\n" + mafia + " mafia left\n");
 	}
 	
@@ -223,6 +244,7 @@ public class GroupGameImpl implements GroupGame {
 			if (mafiaLeft == 0 || mafiaLeft == playersLeft)
 			{
 				endOfGame(mafiaLeft);
+				return ;
 			}
 			Boolean checkedCorrectly = false;
 			if (players.get(choosen[1]).getType() == PlayerType.Mafia)
@@ -251,6 +273,7 @@ public class GroupGameImpl implements GroupGame {
 			if (mafiaLeft == 0 || mafiaLeft == playersLeft)
 			{
 				endOfGame(mafiaLeft);
+				return ;
 			}
 		}
 	}
