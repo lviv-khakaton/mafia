@@ -184,6 +184,10 @@ public class GroupGameImpl implements GroupGame {
 	
 	void endOfGame(int mafia)
 	{
+		
+		if (mafia==0) MakeSound.play("9.wav");
+		else MakeSound.play("10.wav");
+		
 		finished = true;
 		for(Player player : players)
 			player.notifyFinish(mafia!=0);
@@ -203,14 +207,14 @@ public class GroupGameImpl implements GroupGame {
 		PlayerType[] currentType = {PlayerType.Mafia, PlayerType.Detective, PlayerType.Doctor};
 		String[] typeNames = {"PlayerType.Mafia", "PlayerType.Detective", "PlayerType.Doctor"};
 		
-		String[] messagesWakeUp = {"-----Mafia wake up.", "-----Detective wakes up.", "-----Doctor wakes up."};
-		String[] messagesGoSleep = {"-----Mafia go sleep.", "-----Detective goes sleep.", "-----Doctor goes sleep."};
+		String[] messagesWakeUp = {"0.wav", "2.wav", "4.wav"};
+		String[] messagesGoSleep = {"1.wav", "3.wav", "5.wav"};
 		
 				
 		while (true)
 		{
 			
-			System.out.println("-----It's night time. Everybody go sleep.");
+			MakeSound.play("6.wav");
 			
 			Integer[] choosen = new Integer[4];
 			for (int currentTypeIndex = 0; currentTypeIndex < 3; ++currentTypeIndex)
@@ -224,16 +228,16 @@ public class GroupGameImpl implements GroupGame {
 					}
 				}
 				if (currentPlayers.size() > 0){
-					System.out.println(messagesWakeUp[currentTypeIndex]);
+					MakeSound.play(messagesWakeUp[currentTypeIndex]);
 					choosen[currentTypeIndex] = makeMove(currentPlayers);
-					System.out.println(messagesGoSleep[currentTypeIndex]);
+					MakeSound.play(messagesGoSleep[currentTypeIndex]);
 				}
 				else
 					choosen[currentTypeIndex] = -1;
 				System.out.println("chosen by " + typeNames[currentTypeIndex] + " : " + choosen[currentTypeIndex]);
 			}
 			
-			System.out.println("-----It's day time. Everybody wake up.");
+			MakeSound.play("7.wav");
 			
 			int indexOfKilled = choosen[0];
 			if (choosen[0] == choosen[2])
@@ -264,7 +268,7 @@ public class GroupGameImpl implements GroupGame {
 				}
 			}
 			
-			System.out.println("-----Choose whom to kill.");
+			MakeSound.play("8.wav");
 			
 			System.out.println("ChooseWhomToKill called");
 			
