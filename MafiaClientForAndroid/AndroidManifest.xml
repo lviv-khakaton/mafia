@@ -26,6 +26,10 @@
             android:name=".GameRoom"
             android:label="@string/title_activity_main" >
         </activity>
+        <activity
+            android:name=".FinalScore"
+            android:label="@string/title_activity_main" >
+        </activity>
     </application>
 
 </manifest>

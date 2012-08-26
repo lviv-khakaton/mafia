@@ -27,8 +27,7 @@ public class MainActivity extends Activity {
     	String login = et.getText().toString();
     	Magic.pm.name = login;
     	Toast.makeText(getApplicationContext(), "trying to connect you, " + login + "!", Toast.LENGTH_LONG).show();
-    	Intent intent = new Intent(this.getApplicationContext(), GameRoom.class);
-    	
+    	Intent intent = new Intent(this.getApplicationContext(), GameRoom.class);    	
     	startActivity(intent);
     }
 }
