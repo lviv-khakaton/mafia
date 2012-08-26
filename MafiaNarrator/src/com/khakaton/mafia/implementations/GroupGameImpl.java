@@ -160,6 +160,8 @@ public class GroupGameImpl implements GroupGame {
 	
 	void endOfGame(int mafia)
 	{
+		if (mafia==0) System.out.println("-----Citizens have won!");
+		else System.out.println("-----Mafia has won!");
 		System.out.println("Game Over!\n" + mafia + " mafia left\n");
 	}
 	
@@ -175,8 +177,16 @@ public class GroupGameImpl implements GroupGame {
 		
 		PlayerType[] currentType = {PlayerType.Mafia, PlayerType.Detective, PlayerType.Doctor};
 		String[] typeNames = {"PlayerType.Mafia", "PlayerType.Detective", "PlayerType.Doctor"};
+		
+		String[] messagesWakeUp = {"-----Mafia wake up.", "-----Detective wakes up.", "-----Doctor wakes up."};
+		String[] messagesGoSleep = {"-----Mafia go sleep.", "-----Detective goes sleep.", "-----Doctor goes sleep."};
+		
+				
 		while (true)
 		{
+			
+			System.out.println("-----It's night time. Everybody go sleep.");
+			
 			Integer[] choosen = new Integer[4];
 			for (int currentTypeIndex = 0; currentTypeIndex < 3; ++currentTypeIndex)
 			{
@@ -188,12 +198,18 @@ public class GroupGameImpl implements GroupGame {
 						currentPlayers.add(players.get(i));
 					}
 				}
-				if (currentPlayers.size() > 0)
+				if (currentPlayers.size() > 0){
+					System.out.println(messagesWakeUp[currentTypeIndex]);
 					choosen[currentTypeIndex] = makeMove(currentPlayers);
+					System.out.println(messagesGoSleep[currentTypeIndex]);
+				}
 				else
 					choosen[currentTypeIndex] = -1;
 				System.out.println("chosen by " + typeNames[currentTypeIndex] + " : " + choosen[currentTypeIndex]);
 			}
+			
+			System.out.println("-----It's day time. Everybody wake up.");
+			
 			int indexOfKilled = choosen[0];
 			if (choosen[0] == choosen[2])
 				indexOfKilled = -1;
@@ -221,6 +237,8 @@ public class GroupGameImpl implements GroupGame {
 					currentPlayers.add(players.get(i));
 				}
 			}
+			
+			System.out.println("-----Choose whom to kill.");
 			
 			System.out.println("ChooseWhomToKill called");
 			
