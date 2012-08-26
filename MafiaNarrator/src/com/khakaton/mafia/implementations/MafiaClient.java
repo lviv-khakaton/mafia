@@ -1,6 +1,7 @@
 package com.khakaton.mafia.implementations;
 
 import java.io.*;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;

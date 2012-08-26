@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+
 public class MafiaServer {
 
 	/**
@@ -14,7 +15,7 @@ public class MafiaServer {
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		System.out.println("Server started.\n");
-		ServerSocket ss = new ServerSocket(4444);
+		ServerSocket ss = new ServerSocket(4444);	
 		
 		GroupGameImpl gg = new GroupGameImpl(1,1,1,3);
 		
@@ -26,6 +27,7 @@ public class MafiaServer {
 			System.out.println("Player added : " + playername);
 			System.out.println(gg.getPlayersCount() + " players connected.");
 			if(gg.getPlayersCount()==gg.getTotalCount()) {
+				
 				gg.start();
 				System.out.println("Game started.");
 			}

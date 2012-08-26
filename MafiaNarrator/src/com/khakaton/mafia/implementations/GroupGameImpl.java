@@ -58,6 +58,11 @@ public class GroupGameImpl implements GroupGame {
 	public void start() {
 		// TODO Auto-generated method stub
 		setRoles();
+		List<String> playerNames = new ArrayList<String>();
+		for(Player player : players)
+			playerNames.add(player.getPlayerName());
+		for(Player player : players)
+			player.notifyClient(playerNames);
 		play();
 	}
 
@@ -70,11 +75,15 @@ public class GroupGameImpl implements GroupGame {
 
 	private int makeMove(List<Player> currentPlayers)
 	{
+		List<Boolean> actives = new ArrayList<Boolean>();
+		for(Player player : players)
+			actives.add(player.getAlive());
+		
 		while (true)
 		{
 			for(Player player : currentPlayers) {
 				try {
-					player.setActive(true);
+					player.setActive(true, actives);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -91,7 +100,7 @@ public class GroupGameImpl implements GroupGame {
 				if(voted!=-1) {
 					for(Player player : currentPlayers) {
 						try {
-							player.setActive(false);
+							player.setActive(false, actives);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -104,12 +113,15 @@ public class GroupGameImpl implements GroupGame {
 	
 	private int chooseWhomToKill(List<Player> currentPlayers)
 	{
-		System.out.println("in chooseWhomToKill");
+		List<Boolean> actives = new ArrayList<Boolean>();
+		for(Player player : players)
+			actives.add(player.getAlive());
+		
 		while (true)
 		{
 			for(Player player : currentPlayers) {
 				try {
-					player.setActive(true);
+					player.setActive(true, actives);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -138,7 +150,7 @@ public class GroupGameImpl implements GroupGame {
 			if (firstMax != secondMax) {
 				for(Player player : currentPlayers) {
 					try {
-						player.setActive(false);
+						player.setActive(false, actives);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
