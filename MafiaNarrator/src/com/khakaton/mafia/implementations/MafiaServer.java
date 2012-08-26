@@ -30,8 +30,8 @@ public class MafiaServer {
 
 			if(gg.getPlayersCount()==gg.getTotalCount())
 			{
-				gg.start();
 				System.out.println("Game started.");
+				gg.start();
 			}
 		}
 	}
