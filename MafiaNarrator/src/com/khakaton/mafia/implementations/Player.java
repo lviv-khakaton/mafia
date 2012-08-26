@@ -44,10 +44,12 @@ public class Player {
 			os.writeInt(0);
 			for(Boolean a : actives)
 				os.writeBoolean(a);
+			os.flush();
 			return ;
 		}
 		//set inactive
 		os.writeInt(7);
+		os.flush();
 	}
 
 	public int getDecision() {
@@ -93,8 +95,10 @@ public class Player {
 		}
 		try {
 			os.writeUTF(code);
+			os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 }

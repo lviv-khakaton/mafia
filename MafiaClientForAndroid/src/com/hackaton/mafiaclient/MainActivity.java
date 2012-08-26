@@ -25,6 +25,7 @@ public class MainActivity extends Activity {
     public void Connect(View w) {
     	EditText et = (EditText) findViewById(R.id.login);
     	String login = et.getText().toString();
+    	Magic.pm.name = login;
     	Toast.makeText(getApplicationContext(), "trying to connect you, " + login + "!", Toast.LENGTH_LONG).show();
     	Intent intent = new Intent(this.getApplicationContext(), GameRoom.class);
     	

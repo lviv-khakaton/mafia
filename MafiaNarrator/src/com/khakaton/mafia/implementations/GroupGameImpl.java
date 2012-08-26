@@ -22,6 +22,10 @@ public class GroupGameImpl implements GroupGame {
 		players = new ArrayList<Player>();
 		int detectiveCount = 1, doctorCount = 1; 
 		int mafiaCount = totalCount / 3; 
+		if(totalCount==1) {
+			mafiaCount = 1;
+			doctorCount = detectiveCount = 0;
+		}
 		this.mafiaCount = mafiaCount;
 		this.doctorCount = doctorCount;
 		this.detectiveCount = detectiveCount;
@@ -221,6 +225,7 @@ public class GroupGameImpl implements GroupGame {
 			if (mafiaLeft == 0 || mafiaLeft == playersLeft)
 			{
 				endOfGame(mafiaLeft);
+				return ;
 			}
 			Boolean checkedCorrectly = false;
 			if (players.get(choosen[1]).getType() == PlayerType.Mafia)
@@ -247,6 +252,7 @@ public class GroupGameImpl implements GroupGame {
 			if (mafiaLeft == 0 || mafiaLeft == playersLeft)
 			{
 				endOfGame(mafiaLeft);
+				return ;
 			}
 		}
 	}
