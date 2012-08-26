@@ -4,22 +4,20 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class GameRoom extends Activity implements View.OnClickListener {
 	
@@ -67,6 +65,11 @@ public class GameRoom extends Activity implements View.OnClickListener {
 		this.width = w;
 	}
 	
+	void endGame() {
+		Intent intent = new Intent(this.getApplicationContext(), FinalScore.class);
+		startActivity(intent);
+	}
+	
 	private void Initialize() {
 		final ProgressDialog dialog = ProgressDialog.show( GameRoom.this, "Waiting for other players", "Please wait...", true);
 		Thread thread=new Thread(new Runnable(){
@@ -101,10 +104,8 @@ public class GameRoom extends Activity implements View.OnClickListener {
         layout.setPadding(1,1,1,1);
 		
 		TextView tv = new TextView(this);
-		tv.setText("Your name : " + Magic.pm.name + ", you are " + Magic.pm.type);
-		layout.addView(tv);/*
-        tv.setText("Users");
-        layout.addView(tv);*/
+		tv.setText("Name : " + Magic.pm.name + " .::. Role : " + Magic.pm.type);
+		layout.addView(tv);
 
         for (int i=0; i<width; i++) {
             TableRow tr = new TableRow(this);
@@ -115,6 +116,7 @@ public class GameRoom extends Activity implements View.OnClickListener {
                 Button b = new Button (this);
                 b.setText(names.get(index) + " : " + i + j);
                 b.setTextSize(10.0f);
+                b.setId(index);
                 b.setTextColor(Color.rgb( 255, 0, 0));
                 b.setOnClickListener(this);
                 if(!actives.get(index))
@@ -123,14 +125,17 @@ public class GameRoom extends Activity implements View.OnClickListener {
             }
             layout.addView(tr);
         }
-        Log.i("#GMR","Reached_1");
         super.setContentView(layout);
-        Log.i("#GMR","Reached_2");
 	}
 
+	@Override
 	public void onClick(View view) {
-	    ((Button) view).setText("*");
-	    ((Button) view).setEnabled(false);
+		int id = ((Button) view).getId();
+		try {
+			os.writeInt(id);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
@@ -164,11 +169,6 @@ class ActionReader implements Runnable {
 					}
 				gr.actives = tmp;
 				gr.refreshView();
-				try {
-					gr.os.writeInt(0);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 				continue;
 			}
 			
@@ -179,14 +179,16 @@ class ActionReader implements Runnable {
 			if(code==2) {
 				try {
 					boolean won = gr.is.readBoolean();
+					Magic.pm.won = won;
+					gr.endGame();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				//TODO smth with WON
 				break;
 			}
 			if(code==7) {
 				//TODO fall asleep
+				
 				continue;
 			}
 			

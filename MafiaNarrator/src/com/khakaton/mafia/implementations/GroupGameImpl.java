@@ -28,6 +28,10 @@ public class GroupGameImpl implements GroupGame {
 			mafiaCount = 1;
 			doctorCount = detectiveCount = 0;
 		}
+		if(totalCount==2) {
+			mafiaCount = 1;
+			doctorCount = detectiveCount = 0;
+		}
 		this.mafiaCount = mafiaCount;
 		this.doctorCount = doctorCount;
 		this.detectiveCount = detectiveCount;

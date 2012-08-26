@@ -17,7 +17,7 @@ public class MafiaServer {
 		System.out.println("Server started.\n");
 		ServerSocket ss = new ServerSocket(4444);	
 		
-		GroupGameImpl gg = new GroupGameImpl(3);
+		GroupGameImpl gg = new GroupGameImpl(2);
 		
 		while(true)
 		{
