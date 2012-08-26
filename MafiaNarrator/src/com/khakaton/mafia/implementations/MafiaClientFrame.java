@@ -143,17 +143,9 @@ public class MafiaClientFrame extends JFrame {
 				} catch (IOException e2) {
 					e2.printStackTrace();
 				}
-				System.out.println(type);
 				jLabel0.setText(name + " " + type);
 				jTextField0.setVisible(false);
 				jButton0.setVisible(false);
-				jButton0.setEnabled(false);
-				contentPane.remove(jButton0);
-				contentPane.repaint(0, 0, 1000, 1000);
-				System.out.println(type);
-				contentPane.repaint();
-				jTextField0.repaint();
-				jButton0.repaint();
 				final JButton[] buttons = new JButton[n];
 				for (int i=0; i < n; ++i)
 				{
@@ -177,7 +169,7 @@ public class MafiaClientFrame extends JFrame {
 				}
 				contentPane.repaint();
 				
-				start += 1000;
+				start += 100;
 			    new java.util.Timer().schedule(new java.util.TimerTask() 
 			    {
 	                public void run() 
@@ -187,36 +179,30 @@ public class MafiaClientFrame extends JFrame {
 							try {
 								dialog = iis.readInt();
 							} catch (IOException e1) {
-								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 	                		if (dialog == 0)
 	                		{
-	                			System.out.println("Get0");
 	                			for (int i=0; i < m; ++i)
 	                			{
 	                				try {
 										buttons[i].setEnabled(iis.readBoolean());
 									} catch (IOException e) {
-										// TODO Auto-generated catch block
 										e.printStackTrace();
 									}
 	                			}
 	                		}else
 	                		if (dialog == 1)
 	                		{
-	                			System.out.println("Get1");
 	                			jLabel0.setText("You are dead");
 	                		}
 	                		else
 	                		if (dialog == 2)
 	                		{
-	                			System.out.println("Get2");
 	                			boolean won = false;
 								try {
 									won = iis.readBoolean();
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
 	                			if (won)
@@ -226,7 +212,6 @@ public class MafiaClientFrame extends JFrame {
 	                		}else
 	                		if (dialog == 7)
 	                		{
-	                			System.out.println("Get7");
 	                			for (int i=0; i < m; ++i)
 	                			{
 	                				buttons[i].setEnabled(false);
