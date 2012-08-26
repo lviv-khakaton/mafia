@@ -17,8 +17,10 @@ public class GroupGameImpl implements GroupGame {
 	private int detectiveCount;
 	private int doctorCount;
 	private int totalCount;
+	private boolean finished;
 	
 	public GroupGameImpl(int totalCount) {
+		finished = false;
 		players = new ArrayList<Player>();
 		int detectiveCount = 1, doctorCount = 1; 
 		int mafiaCount = totalCount / 3; 
@@ -74,7 +76,7 @@ public class GroupGameImpl implements GroupGame {
 
 	@Override
 	public void play() {
-		while(true) {
+		while(!finished) {
 			doCycle();
 		}
 	}
@@ -178,6 +180,9 @@ public class GroupGameImpl implements GroupGame {
 	
 	void endOfGame(int mafia)
 	{
+		finished = true;
+		for(Player player : players)
+			player.notifyFinish(mafia!=0);
 		System.out.println("Game Over!\n" + mafia + " mafia left\n");
 	}
 	
