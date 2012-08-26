@@ -20,8 +20,8 @@ public class GroupGameImpl implements GroupGame {
 	
 	public GroupGameImpl(int totalCount) {
 		players = new ArrayList<Player>();
-		int detectiveCount = 1, doctorCount = 1;
-		int mafiaCount = totalCount / 3;
+		int detectiveCount = 1, doctorCount = 1; 
+		int mafiaCount = totalCount / 3; 
 		this.mafiaCount = mafiaCount;
 		this.doctorCount = doctorCount;
 		this.detectiveCount = detectiveCount;
