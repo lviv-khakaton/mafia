@@ -11,10 +11,10 @@ public class InputStreamProvider {
 		this.inputStream = inputStream;
 	}
 	
-	public int choosedPerson() throws IOException {
+	public int chosenPerson() throws IOException {
 		//TODO need to be done in another thread.
-		int choosed = inputStream.read();
-		return choosed;
+		int chosen = inputStream.read();
+		return chosen;
 	}
 	
 }
