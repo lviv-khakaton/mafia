@@ -31,13 +31,12 @@ public class GameRoom extends Activity implements View.OnClickListener {
 	 @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.cycle = new Thread(new ActionReader(this));
+        //this.cycle = new Thread(new ActionReader(this));
         try {
 			setupConnection();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        //super.setContentView(R.layout.activity_gameroom);
     }
 
 	private void setupConnection() throws IOException {
@@ -63,6 +62,10 @@ public class GameRoom extends Activity implements View.OnClickListener {
 		while(w*w < n)
 			w++;
 		this.width = w;
+		Log.i("#GMR","before refresh1");
+		refreshView();
+		Log.i("#GMR","after refresh1");
+		cycle.start();
 	}
 	
 	void endGame() {
@@ -71,30 +74,87 @@ public class GameRoom extends Activity implements View.OnClickListener {
 	}
 	
 	private void Initialize() {
-		final ProgressDialog dialog = ProgressDialog.show( GameRoom.this, "Waiting for other players", "Please wait...", true);
-		Thread thread=new Thread(new Runnable(){
-
-        public void run(){
-        	try {
-				loadData();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-            runOnUiThread(new Runnable(){
-                @Override
-                public void run() {
-                    if(dialog.isShowing())
-                        dialog.dismiss();
-                }
-            });
-        }
-
+		
+		cycle = new Thread(new Runnable(){
+	        public void run(){
+	            runOnUiThread(new Runnable(){
+	                @Override
+	                public void run() {
+	                    
+	                	while(true) {
+	            			int code = -1;
+	            			try {
+	            				code = is.readInt();
+	            				Log.i("#GMR",code + " read");
+	            			} catch (IOException e) {
+	            				e.printStackTrace();
+	            			}
+	            			if(code==0) {
+	            				List<Boolean> tmp = new ArrayList<Boolean>();
+	            				for(int i=0;i<actives.size();i++)
+	            					try {
+	            						tmp.add(is.readBoolean());
+	            					} catch (IOException e) {
+	            						e.printStackTrace();
+	            					}
+	            				actives = tmp;
+	            				Log.i("#GMR","before refresh_X");
+	            				refreshView();
+	            				Log.i("#GMR","after refresh_X");
+	            				continue;
+	            			}
+	            			
+	            			if(code==1) {
+	            				//you have died
+	            				continue;
+	            			}
+	            			if(code==2) {
+	            				try {
+	            					boolean won = is.readBoolean();
+	            					Magic.pm.won = won;
+	            					endGame();
+	            				} catch (IOException e) {
+	            					e.printStackTrace();
+	            				}
+	            				break;
+	            			}
+	            			if(code==7) {
+	            				//TODO fall asleep
+	            				
+	            				continue;
+	            			}
+	            			
+	            			
+	            			break;
+	            		}
+	                	
+	                }
+	            });
+	        }
         });
-        
+		
+		//final ProgressDialog dialog = ProgressDialog.show( GameRoom.this, "Waiting for other players", "Please wait...", true);
+		Thread thread=new Thread(new Runnable(){
+	        public void run() {       	
+        		runOnUiThread(new Runnable(){
+        			@Override
+	                public void run() {
+        				Log.i("#GMR","loadData start");
+        				try {
+							loadData();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+        				Log.i("#GMR","loadData finish");
+//	                    if(dialog.isShowing()) dialog.dismiss();
+	                    Log.i("#GMR","Timer removed");
+        			}
+        		});
+	            
+	        }
+        });
 		thread.start();
 		
-		cycle.start();
-		refreshView();
 	}
 
 	void refreshView() {
@@ -116,7 +176,7 @@ public class GameRoom extends Activity implements View.OnClickListener {
                 Button b = new Button (this);
                 b.setText(names.get(index) + " : " + i + j);
                 b.setTextSize(10.0f);
-                b.setId(index);
+                //b.setId(index);
                 b.setTextColor(Color.rgb( 255, 0, 0));
                 b.setOnClickListener(this);
                 if(!actives.get(index))
@@ -139,7 +199,7 @@ public class GameRoom extends Activity implements View.OnClickListener {
 	}
 
 }
-
+/*
 class ActionReader implements Runnable {
 
 	private GameRoom gr;
@@ -198,3 +258,4 @@ class ActionReader implements Runnable {
 	}
 	
 }
+*/
