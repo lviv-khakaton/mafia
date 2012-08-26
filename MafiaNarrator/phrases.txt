@@ -1,0 +1,11 @@
+0. Mafia wake up.
+1. Mafia go sleep.
+2. Detective wakes up.
+3. Detective goes sleep.
+4. Doctor wakes up.
+5. Doctor goes sleep.
+6. It's night time. Everybody go sleep.
+7. It's day time. Everybody wake up.
+8. Choose Whom to kill.
+9. Citizens have won!
+10.Mafia has won!
