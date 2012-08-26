@@ -48,14 +48,11 @@ public class GameRoom extends Activity implements View.OnClickListener {
 		is = new DataInputStream(socket.getInputStream());
         String myName = Magic.pm.name;
         os.writeUTF(myName);
-        Log.i("#GMR", "End of setup connection");
         Initialize();
 	}
     
-	private void Initialize() throws IOException {
-		//ProgressDialog dialog = ProgressDialog.show( GameRoom.this, "Loading", "Please wait...", true);
+	private void loadData() throws IOException {
 		int n = is.readInt();
-		Log.i("#GMR", "N was READ");
 		names = new ArrayList<String>();
 		actives = new ArrayList<Boolean>();
 		for(int i=0;i<n;i++) {
@@ -64,12 +61,35 @@ public class GameRoom extends Activity implements View.OnClickListener {
 			actives.add(true);
 		}
 		Magic.pm.type = is.readUTF();
-		Log.i("#GMR",Magic.pm.type + " type");
 		int w = 1;
 		while(w*w < n)
 			w++;
 		this.width = w;
-		//dialog.dismiss();
+	}
+	
+	private void Initialize() {
+		final ProgressDialog dialog = ProgressDialog.show( GameRoom.this, "Waiting for other players", "Please wait...", true);
+		Thread thread=new Thread(new Runnable(){
+
+        public void run(){
+        	try {
+				loadData();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+            runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    if(dialog.isShowing())
+                        dialog.dismiss();
+                }
+            });
+        }
+
+        });
+        
+		thread.start();
+		
 		cycle.start();
 		refreshView();
 	}
