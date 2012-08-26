@@ -1,206 +1,246 @@
 package com.khakaton.mafia.implementations;
 
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
+import java.awt.GridBagLayout;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-
-import org.dyno.visual.swing.layouts.Constraints;
-import org.dyno.visual.swing.layouts.GroupLayout;
-import org.dyno.visual.swing.layouts.Leading;
-
-//VS4E -- DO NOT REMOVE THIS LINE!
 public class MafiaClientFrame extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JButton jButton0;
+	private JPanel contentPane;
 	private JTextField jTextField0;
-	private JLabel jLabel0;
-	private JPanel jPanel0;
-	private static final String PREFERRED_LOOK_AND_FEEL = "javax.swing.plaf.metal.MetalLookAndFeel";
-
-	public MafiaClientFrame() {
-		initComponents();
-	}
-
-	private void initComponents() {
-		setLayout(new GroupLayout());
-		add(getJButton0(), new Constraints(new Leading(203, 10, 10), new Leading(68, 12, 12)));
-		add(getJTextField0(), new Constraints(new Leading(42, 10, 10), new Leading(71, 12, 12)));
-		add(getJLabel0(), new Constraints(new Leading(12, 12, 12), new Leading(12, 12, 12)));
-		add(getJPanel0(), new Constraints(new Leading(10, 295, 10, 10), new Leading(22, 214, 10, 10)));
-		setSize(320, 240);
-	}
-
-	private JPanel getJPanel0() {
-		if (jPanel0 == null) {
-			jPanel0 = new JPanel();
-			jPanel0.setLayout(new GridLayout(4,6));
-		}
-		return jPanel0;
-	}
-
-	private JLabel getJLabel0() {
-		if (jLabel0 == null) {
-			jLabel0 = new JLabel();
-			jLabel0.setText("");
-		}
-		return jLabel0;
-	}
-
-	private JTextField getJTextField0() {
-		if (jTextField0 == null) {
-			jTextField0 = new JTextField();
-			jTextField0.setText("Enter your name");
-		}
-		return jTextField0;
-	}
-
-	private JButton getJButton0() {
-		if (jButton0 == null) {
-			jButton0 = new JButton();
-			jButton0.setText("jButton0");
-			jButton0.addMouseListener(new MouseAdapter() {
-	
-				public void mouseClicked(MouseEvent event) {
-					try {
-						jButton0MouseMouseClicked(event);
-					} catch (UnknownHostException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			});
-		}
-		return jButton0;
-	}
-
-	private static void installLnF() {
-		try {
-			String lnfClassname = PREFERRED_LOOK_AND_FEEL;
-			if (lnfClassname == null)
-				lnfClassname = UIManager.getCrossPlatformLookAndFeelClassName();
-			UIManager.setLookAndFeel(lnfClassname);
-		} catch (Exception e) {
-			System.err.println("Cannot install " + PREFERRED_LOOK_AND_FEEL
-					+ " on this platform:" + e.getMessage());
-		}
-	}
 
 	/**
-	 * Main entry of the class.
-	 * Note: This class is only created so that you can easily preview the result at runtime.
-	 * It is not expected to be managed by the designer.
-	 * You can modify it as you like.
+	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		installLnF();
-		SwingUtilities.invokeLater(new Runnable() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				MafiaClientFrame frame = new MafiaClientFrame();
-				frame.setDefaultCloseOperation(MafiaClientFrame.EXIT_ON_CLOSE);
-				frame.setTitle("MafiaClientFrame");
-				frame.getContentPane().setPreferredSize(frame.getSize());
-				frame.pack();
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
+				try {
+					MafiaClientFrame frame = new MafiaClientFrame();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
 
-	private void jButton0MouseMouseClicked(MouseEvent event) throws UnknownHostException, IOException 
-	{
-		Socket socket = new Socket("localhost", 4444);
-		String name = jTextField0.getText();
-		jLabel0.setText(name);
-		final DataOutputStream os = new DataOutputStream(socket.getOutputStream());
-		DataInputStream is = new DataInputStream(socket.getInputStream());
-		os.writeUTF(name);
-		int n = is.readInt();
-		String[] names = new String[n];
-		for (int i=0; i < n; ++i)
-		{
-			names[i] = is.readUTF();
-		}
-		String type = is.readUTF();
-		jLabel0.setText(name + " " + type);
-		jTextField0.setVisible(false);
-		jButton0.setVisible(false);
-		JButton[] buttons = new JButton[n];
-		for (int i=0; i < n; ++i)
-		{
-			buttons[i] = new JButton(names[i]);
-			buttons[i].setSize(40, 40);
-			buttons[i].setActionCommand(Integer.toString(i));
-			buttons[i].addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-			  try {
-				os.writeInt(Integer.parseInt(e.getActionCommand()));
-			} catch (NumberFormatException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			  }
-			});
-			jPanel0.add(buttons[i]);
-		}
+	/**
+	 * Create the frame.
+	 */
+	
+	
+	public MafiaClientFrame() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
 		
-		while(true) {
-			int dialog = is.readInt();
-			if (dialog == 0)
-			{
-				for (int i=0; i < n; ++i)
-				{
-					buttons[i].setEnabled(is.readBoolean());
-				}
-				
-			}else
-			if (dialog == 1)
-			{
-				Font font = new Font("Arial", 1, 48);
-				jLabel0.setFont(font);
-				jLabel0.setText("You are dead");
-			}
-			else
-			if (dialog == 2)
-			{
-				boolean won = is.readBoolean();
-				Font font = new Font("Arial", 1, 48);
-				jLabel0.setFont(font);
-				if (won)
-					jLabel0.setText("You won");
-				else
-					jLabel0.setText("You lost");
-			}else
-			if (dialog == 7)
-			{
-				for (int i=0; i < n; ++i)
-				{
-					buttons[i].setEnabled(false);
-				}
-			}
-		}
-	}
+		final JLabel jLabel0 = new JLabel("MyNameHere");
+		jLabel0.setBounds(12, 12, 103, 15);
+		contentPane.add(jLabel0);
+		
+		jTextField0 = new JTextField();
+		jTextField0.setText("EnterYourName");
+		jTextField0.setBounds(27, 118, 114, 19);
+		contentPane.add(jTextField0);
+		jTextField0.setColumns(10);
 
+		
+		
+		final JButton jButton0 = new JButton("Ok");
+		jButton0.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("PressedOK");
+				Socket socket = null;
+				try {
+					socket = new Socket("localhost", 4444);
+				} catch (UnknownHostException e2) {
+					e2.printStackTrace();
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				}
+
+				final String name = jTextField0.getText();
+				//11111111111111111111111111111111111111111111111111111111111111111111111111111111
+			    long start = System.currentTimeMillis();
+
+	        	start += 1000;
+			    new java.util.Timer().schedule(new java.util.TimerTask() 
+			    {
+	                public void run() 
+	                {
+	                	jLabel0.setText(name);
+	                	
+	                }
+			    }, new Date(start));
+
+				
+				DataOutputStream os = null;
+				try {
+					os = new DataOutputStream(socket.getOutputStream());
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				}
+				final DataOutputStream oos = os;
+				DataInputStream is = null;
+				try {
+					is = new DataInputStream(socket.getInputStream());
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				}
+				try {
+					os.writeUTF(name);
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				}
+				final DataInputStream iis = is;
+				System.out.println(name);
+				int n = 0;
+				try {
+					n = is.readInt();
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				}
+				final int m = n;
+				System.out.println(n);
+				String[] names = new String[n];
+				for (int i=0; i < n; ++i)
+				{
+					try {
+						names[i] = is.readUTF();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					System.out.println(names[i]);
+				}
+				String type = "";
+				try {
+					type = is.readUTF();
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				}
+				System.out.println(type);
+				jLabel0.setText(name + " " + type);
+				jTextField0.setVisible(false);
+				jButton0.setVisible(false);
+				jButton0.setEnabled(false);
+				contentPane.remove(jButton0);
+				contentPane.repaint(0, 0, 1000, 1000);
+				System.out.println(type);
+				contentPane.repaint();
+				jTextField0.repaint();
+				jButton0.repaint();
+				final JButton[] buttons = new JButton[n];
+				for (int i=0; i < n; ++i)
+				{
+					buttons[i] = new JButton(names[i]);
+					buttons[i].setVisible(true);
+					buttons[i].setEnabled(false);
+					buttons[i].setBounds(80*(i+1), 80,80,80);
+					buttons[i].setActionCommand(Integer.toString(i));
+					buttons[i].addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						try {
+						oos.writeInt(Integer.parseInt(e.getActionCommand()));
+					} catch (NumberFormatException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+						}
+					});
+					contentPane.add(buttons[i]);
+				}
+				contentPane.repaint();
+				
+				start += 1000;
+			    new java.util.Timer().schedule(new java.util.TimerTask() 
+			    {
+	                public void run() 
+	                {
+	                	while(true) {
+	                		int dialog = -1;
+							try {
+								dialog = iis.readInt();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+	                		if (dialog == 0)
+	                		{
+	                			System.out.println("Get0");
+	                			for (int i=0; i < m; ++i)
+	                			{
+	                				try {
+										buttons[i].setEnabled(iis.readBoolean());
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+	                			}
+	                		}else
+	                		if (dialog == 1)
+	                		{
+	                			System.out.println("Get1");
+	                			jLabel0.setText("You are dead");
+	                		}
+	                		else
+	                		if (dialog == 2)
+	                		{
+	                			System.out.println("Get2");
+	                			boolean won = false;
+								try {
+									won = iis.readBoolean();
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+	                			if (won)
+	                				jLabel0.setText("You won");
+	                			else
+	                				jLabel0.setText("You lost");
+	                		}else
+	                		if (dialog == 7)
+	                		{
+	                			System.out.println("Get7");
+	                			for (int i=0; i < m; ++i)
+	                			{
+	                				buttons[i].setEnabled(false);
+	                			}
+	                		}
+	                	}
+	                }
+			    }, new Date(start));
+				
+			}
+		});
+		jButton0.setBounds(292, 115, 117, 25);
+		contentPane.add(jButton0);
+		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{jLabel0, jTextField0, jButton0}));
+		
+	}
 }
