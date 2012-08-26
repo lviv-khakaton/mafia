@@ -143,6 +143,10 @@ public class MafiaClientFrame extends JFrame {
 		{
 			names[i] = is.readUTF();
 		}
+		String type = is.readUTF();
+		jLabel0.setText(name + " " + type);
+		jTextField0.setVisible(false);
+		jButton0.setVisible(false);
 		JButton[] buttons = new JButton[n];
 		for (int i=0; i < n; ++i)
 		{
@@ -195,14 +199,11 @@ public class MafiaClientFrame extends JFrame {
 			}else
 			if (dialog == 7)
 			{
-				
+				for (int i=0; i < n; ++i)
+				{
+					buttons[i].setEnabled(false);
+				}
 			}
-			//os.writeInt(chosen);
-			/*
-			 * 1 - dead
-			 * 2 - EOG T-win F-lost
-			 * 7 - sleep
-			 * */
 		}
 	}
 
