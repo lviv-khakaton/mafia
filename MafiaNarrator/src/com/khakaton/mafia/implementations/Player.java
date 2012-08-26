@@ -36,6 +36,13 @@ public class Player {
 	}
 	public void setAlive(Boolean alive) {
 		this.alive = alive;
+		if(!this.alive) {
+			try {
+				os.writeInt(1);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void setActive(boolean active, List<Boolean> actives) throws IOException {
@@ -45,10 +52,25 @@ public class Player {
 			System.out.println("GIVE0");
 			for(Boolean a : actives)
 				os.writeBoolean(a);
+			os.flush();
 			return ;
 		}
 		//set inactive
 		os.writeInt(7);
+		os.flush();
+	}
+	
+	public void notifyFinish(boolean mafiaWon) {
+		try {
+			os.writeInt(2);
+			if( (type==PlayerType.Mafia && mafiaWon) ||
+					(type!=PlayerType.Mafia && !mafiaWon) )
+				os.writeBoolean(true);
+			else
+				os.writeBoolean(false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public int getDecision() {
@@ -94,8 +116,10 @@ public class Player {
 		}
 		try {
 			os.writeUTF(code);
+			os.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
 }

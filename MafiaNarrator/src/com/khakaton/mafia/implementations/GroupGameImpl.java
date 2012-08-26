@@ -17,11 +17,17 @@ public class GroupGameImpl implements GroupGame {
 	private int detectiveCount;
 	private int doctorCount;
 	private int totalCount;
+	private boolean finished;
 	
 	public GroupGameImpl(int totalCount) {
+		finished = false;
 		players = new ArrayList<Player>();
 		int detectiveCount = 1, doctorCount = 1; 
 		int mafiaCount = totalCount / 3; 
+		if(totalCount==1) {
+			mafiaCount = 1;
+			doctorCount = detectiveCount = 0;
+		}
 		this.mafiaCount = mafiaCount;
 		this.doctorCount = doctorCount;
 		this.detectiveCount = detectiveCount;
@@ -70,7 +76,7 @@ public class GroupGameImpl implements GroupGame {
 
 	@Override
 	public void play() {
-		while(true) {
+		while(!finished) {
 			doCycle();
 		}
 	}
@@ -174,6 +180,9 @@ public class GroupGameImpl implements GroupGame {
 	
 	void endOfGame(int mafia)
 	{
+		finished = true;
+		for(Player player : players)
+			player.notifyFinish(mafia!=0);
 		System.out.println("Game Over!\n" + mafia + " mafia left\n");
 	}
 	
@@ -189,8 +198,16 @@ public class GroupGameImpl implements GroupGame {
 		
 		PlayerType[] currentType = {PlayerType.Mafia, PlayerType.Detective, PlayerType.Doctor};
 		String[] typeNames = {"PlayerType.Mafia", "PlayerType.Detective", "PlayerType.Doctor"};
+		
+		String[] messagesWakeUp = {"-----Mafia wake up.", "-----Detective wakes up.", "-----Doctor wakes up."};
+		String[] messagesGoSleep = {"-----Mafia go sleep.", "-----Detective goes sleep.", "-----Doctor goes sleep."};
+		
+				
 		while (true)
 		{
+			
+			System.out.println("-----It's night time. Everybody go sleep.");
+			
 			Integer[] choosen = new Integer[4];
 			for (int currentTypeIndex = 0; currentTypeIndex < 3; ++currentTypeIndex)
 			{
@@ -202,12 +219,18 @@ public class GroupGameImpl implements GroupGame {
 						currentPlayers.add(players.get(i));
 					}
 				}
-				if (currentPlayers.size() > 0)
+				if (currentPlayers.size() > 0){
+					System.out.println(messagesWakeUp[currentTypeIndex]);
 					choosen[currentTypeIndex] = makeMove(currentPlayers);
+					System.out.println(messagesGoSleep[currentTypeIndex]);
+				}
 				else
 					choosen[currentTypeIndex] = -1;
 				System.out.println("chosen by " + typeNames[currentTypeIndex] + " : " + choosen[currentTypeIndex]);
 			}
+			
+			System.out.println("-----It's day time. Everybody wake up.");
+			
 			int indexOfKilled = choosen[0];
 			if (choosen[0] == choosen[2])
 				indexOfKilled = -1;
@@ -221,6 +244,7 @@ public class GroupGameImpl implements GroupGame {
 			if (mafiaLeft == 0 || mafiaLeft == playersLeft)
 			{
 				endOfGame(mafiaLeft);
+				return ;
 			}
 			Boolean checkedCorrectly = false;
 			if (players.get(choosen[1]).getType() == PlayerType.Mafia)
@@ -236,6 +260,8 @@ public class GroupGameImpl implements GroupGame {
 				}
 			}
 			
+			System.out.println("-----Choose whom to kill.");
+			
 			System.out.println("ChooseWhomToKill called");
 			
 			indexOfKilled = chooseWhomToKill(currentPlayers);
@@ -247,6 +273,7 @@ public class GroupGameImpl implements GroupGame {
 			if (mafiaLeft == 0 || mafiaLeft == playersLeft)
 			{
 				endOfGame(mafiaLeft);
+				return ;
 			}
 		}
 	}

@@ -1,3 +1,4 @@
+
 package com.khakaton.mafia.implementations;
 
 import java.awt.event.MouseAdapter;
