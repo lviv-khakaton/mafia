@@ -112,7 +112,7 @@ public class MafiaServerFrame extends JFrame {
 		System.out.println("Server started.\n");
 		ServerSocket ss = new ServerSocket(4444);
 		
-		GroupGameImpl gg = new GroupGameImpl((int) jSpinner0.getValue());
+		GroupGameImpl gg = new GroupGameImpl((Integer) jSpinner0.getValue());
 		
 		while(true)
 		{
