@@ -11,13 +11,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -143,6 +140,10 @@ public class MafiaClientFrame extends JFrame {
 		{
 			names[i] = is.readUTF();
 		}
+		String type = is.readUTF();
+		jLabel0.setText(name + " " + type);
+		jTextField0.setVisible(false);
+		jButton0.setVisible(false);
 		JButton[] buttons = new JButton[n];
 		for (int i=0; i < n; ++i)
 		{
@@ -169,7 +170,6 @@ public class MafiaClientFrame extends JFrame {
 			int dialog = is.readInt();
 			if (dialog == 0)
 			{
-				boolean b;
 				for (int i=0; i < n; ++i)
 				{
 					buttons[i].setEnabled(is.readBoolean());
@@ -195,14 +195,11 @@ public class MafiaClientFrame extends JFrame {
 			}else
 			if (dialog == 7)
 			{
-				
+				for (int i=0; i < n; ++i)
+				{
+					buttons[i].setEnabled(false);
+				}
 			}
-			//os.writeInt(chosen);
-			/*
-			 * 1 - dead
-			 * 2 - EOG T-win F-lost
-			 * 7 - sleep
-			 * */
 		}
 	}
 
