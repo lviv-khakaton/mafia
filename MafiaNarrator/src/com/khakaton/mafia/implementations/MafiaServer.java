@@ -16,16 +16,18 @@ public class MafiaServer {
 		System.out.println("Server started.\n");
 		ServerSocket ss = new ServerSocket(4444);
 		
-		GroupGameImpl gg = new GroupGameImpl(1,1,1,3);
+		GroupGameImpl gg = new GroupGameImpl(3);
 		
-		while(true) {
+		while(true)
+		{
 			Socket client = ss.accept();
 			DataInputStream dis = new DataInputStream(client.getInputStream());
 			String playername = dis.readUTF();
 			gg.addPlayer(playername, client);
 			System.out.println("Player added : " + playername);
 			System.out.println(gg.getPlayersCount() + " players connected.");
-			if(gg.getPlayersCount()==gg.getTotalCount()) {
+			if(gg.getPlayersCount()==gg.getTotalCount())
+			{
 				gg.start();
 				System.out.println("Game started.");
 			}
