@@ -42,6 +42,7 @@ public class Player {
 		if(active) {
 			//set active user ( make his screen brighter )
 			os.writeInt(0);
+			System.out.println("GIVE0");
 			for(Boolean a : actives)
 				os.writeBoolean(a);
 			return ;
